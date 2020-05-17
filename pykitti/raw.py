@@ -263,22 +263,22 @@ class raw:
             self.data_path, 'oxts', 'timestamps.txt')
 
         cam1_timestamp_file = os.path.join(
-            self.data_path, 'cam1', 'timestamps.txt')
+            self.data_path, 'image_01', 'timestamps.txt')
 
         cam2_timestamp_file = os.path.join(
-            self.data_path, 'cam2', 'timestamps.txt')
+            self.data_path, 'image_02', 'timestamps.txt')
 
         cam3_timestamp_file = os.path.join(
-            self.data_path, 'cam3', 'timestamps.txt')
+            self.data_path, 'image_03', 'timestamps.txt')
 
-        cam4_timestamp_file = os.path.join(
-            self.data_path, 'cam4', 'timestamps.txt')     
+        cam0_timestamp_file = os.path.join(
+            self.data_path, 'image_00', 'timestamps.txt')     
 
         self.oxts_timestamps = self.read_timestamp(oxts_timestamp_file)
         self.cam1_timestamps = self.read_timestamp(cam1_timestamp_file)
         self.cam2_timestamps = self.read_timestamp(cam2_timestamp_file)
         self.cam3_timestamps = self.read_timestamp(cam3_timestamp_file)
-        self.cam4_timestamps = self.read_timestamp(cam4_timestamp_file)
+        self.cam0_timestamps = self.read_timestamp(cam0_timestamp_file)
 
         # Subselect the chosen range of frames, if any
         if self.frames is not None:
@@ -286,7 +286,7 @@ class raw:
             self.cam1_timestamps = [self.cam1_timestamps[i] for i in self.frames]
             self.cam2_timestamps = [self.cam2_timestamps[i] for i in self.frames]
             self.cam3_timestamps = [self.cam3_timestamps[i] for i in self.frames]
-            self.cam4_timestamps = [self.cam4_timestamps[i] for i in self.frames]
+            self.cam0_timestamps = [self.cam0_timestamps[i] for i in self.frames]
 
     def _load_oxts(self):
         """Load OXTS data from file."""
