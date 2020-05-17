@@ -242,25 +242,51 @@ class raw:
         data['T_cam3_imu'] = data['T_cam3_velo'].dot(data['T_velo_imu'])
 
         self.calib = namedtuple('CalibData', data.keys())(*data.values())
+    
+    def read_timestamp(self,timestamp_path):
 
-    def _load_timestamps(self):
-        """Load timestamps from file."""
-        timestamp_file = os.path.join(
-            self.data_path, 'oxts', 'timestamps.txt')
+        out_timestamps = []
 
-        # Read and parse the timestamps
-        self.timestamps = []
-        with open(timestamp_file, 'r') as f:
+        with open(timestamp_path, 'r') as f:
             for line in f.readlines():
                 # NB: datetime only supports microseconds, but KITTI timestamps
                 # give nanoseconds, so need to truncate last 4 characters to
                 # get rid of \n (counts as 1) and extra 3 digits
                 t = dt.datetime.strptime(line[:-4], '%Y-%m-%d %H:%M:%S.%f')
-                self.timestamps.append(t)
+                out_timestamps.append(t)
+
+        return out_timestamps
+
+    def _load_timestamps(self):
+        """Load timestamps from file."""
+        oxts_timestamp_file = os.path.join(
+            self.data_path, 'oxts', 'timestamps.txt')
+
+        cam1_timestamp_file = os.path.join(
+            self.data_path, 'cam1', 'timestamps.txt')
+
+        cam2_timestamp_file = os.path.join(
+            self.data_path, 'cam2', 'timestamps.txt')
+
+        cam3_timestamp_file = os.path.join(
+            self.data_path, 'cam3', 'timestamps.txt')
+
+        cam4_timestamp_file = os.path.join(
+            self.data_path, 'cam4', 'timestamps.txt')     
+
+        self.oxts_timestamps = self.read_timestamp(oxts_timestamp_file)
+        self.cam1_timestamps = self.read_timestamp(cam1_timestamp_file)
+        self.cam2_timestamps = self.read_timestamp(cam2_timestamp_file)
+        self.cam3_timestamps = self.read_timestamp(cam3_timestamp_file)
+        self.cam4_timestamps = self.read_timestamp(cam4_timestamp_file)
 
         # Subselect the chosen range of frames, if any
         if self.frames is not None:
-            self.timestamps = [self.timestamps[i] for i in self.frames]
+            self.oxts_timestamps = [self.oxts_timestamps[i] for i in self.frames]
+            self.cam1_timestamps = [self.cam1_timestamps[i] for i in self.frames]
+            self.cam2_timestamps = [self.cam2_timestamps[i] for i in self.frames]
+            self.cam3_timestamps = [self.cam3_timestamps[i] for i in self.frames]
+            self.cam4_timestamps = [self.cam4_timestamps[i] for i in self.frames]
 
     def _load_oxts(self):
         """Load OXTS data from file."""
