@@ -4,6 +4,7 @@ import datetime as dt
 import glob
 import os
 from collections import namedtuple
+import time
 
 import numpy as np
 
@@ -252,8 +253,13 @@ class raw:
                 # NB: datetime only supports microseconds, but KITTI timestamps
                 # give nanoseconds, so need to truncate last 4 characters to
                 # get rid of \n (counts as 1) and extra 3 digits
-                t = dt.datetime.strptime(line[:-4], '%Y-%m-%d %H:%M:%S.%f')
-                out_timestamps.append(t)
+                #t = dt.datetime.strptime(line[:-11], '%Y-%m-%d %H:%M:%S.%f')
+                t = dt.datetime.strptime(line[:-11], '%Y-%m-%d %H:%M:%S')
+
+                # convert into nano s
+                nano_s = int(time.mktime(t.timetuple())*1000000000)+int(line[-10:-1])
+ 
+                out_timestamps.append(nano_s)
 
         return out_timestamps
 
